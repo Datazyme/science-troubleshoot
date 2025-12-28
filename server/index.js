@@ -18,6 +18,7 @@ app.use(express.json({extended: true}))
 app.use(cors({credentials: true, origin: ["http://localhost:5173"]})) //replaced with front end url
 app.use(upload())
 
-app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`))
+connect(process.env.MONGO_URL).then(app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`))).catch(err => console.log(err))
+//npm run dev
 
 
