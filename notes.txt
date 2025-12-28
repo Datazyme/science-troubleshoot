@@ -1,0 +1,26 @@
+These are my notes on creating this site
+When setting up the repository in git, found repository already assigned:
+    kuzminanastasia@Kuzmins-Mac-mini science-troubleshoot % git remote add origin https://github.com/Datazyme/science-troubleshoot.git
+    error: remote origin already exists.
+To show origin: git remote show origin
+To remove origin: git remote remove origin
+Repository created but other projects were magically moved into it already
+
+Deleted github and local repository
+Start again:
+First type git init --- did not do this above -- this was mistake
+
+dependencies:
+npm i bcryptjs cloudinary cors dotenv express express-fileu
+pload jsonwebtoken mongoose socket.io uuid
+and npm i -D nodemon
+
+add notes and 
+# dependencies
+/node_modules
+    did not put gitignore in server folder
+    did commit but did not yet push
+    to undo commit before push: git reset HEAD~
+
+
+To run file in node, type: node filename ie...node index.js
