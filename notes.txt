@@ -24,3 +24,35 @@ add notes and
 
 
 To run file in node, type: node filename ie...node index.js
+
+Testing routes with postman 
+
+Profile1:
+fullName: General Grievus
+email: grievus@hotmail.com
+password: 6666666
+
+Profile2:
+fullName: Boba Fet
+email: fet@gmail.com
+password: 1234567
+
+req.params = values captured from the URL path
+Defined by :paramName in routes
+Always a string
+Used to fetch specific resources
+
+When to use req.params
+
+Use it when:
+Identifying a specific resource
+URLs like:
+/users/:id
+/posts/:id
+/comments/:id
+req.params.id → user ID from URL
+req.params is an Express object that contains route parameters — values taken directly from the URL path.
+
+Do not use it for:
+Search filters → use req.query
+Form submissions → use req.body
