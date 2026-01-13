@@ -9,7 +9,7 @@ router.post('/users/login', loginUser)
 router.get('/users/:id', getUser)
 router.get('/users', getUsers)
 router.patch('/users/:id', authMiddleware, editUser)
-router.get('/users/:id/follow-unfollow', followUnfollowUser)
+router.get('/users/:id/follow-unfollow', authMiddleware, followUnfollowUser)
 router.post('/users/avatar', changeUserAvatar)
 
 module.exports = router;

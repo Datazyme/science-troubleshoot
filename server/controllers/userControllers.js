@@ -2,6 +2,7 @@ const HttpError = require('../models/errorModel')
 const userModel = require('../models/userModel')
 const bcrypt = require("bcryptjs")
 const jtoken = require("jsonwebtoken")
+const uuid = require("uuid").v4;
 
 
 //===========Register User
@@ -117,7 +118,7 @@ const editUser = async (req, res, next) => {
         const {fullName, bio} = req.body
         const editedUser = await userModel.findByIdAndUpdate(req.user.id,
         {fullName, bio}, {new: true})
-        res.json(editUser).status(200)
+        res.json(editedUser).status(200)
     } catch (error) {
         return next(new HttpError(error))
     }
@@ -129,7 +130,26 @@ const editUser = async (req, res, next) => {
 
 const followUnfollowUser = async (req, res, next) => {
     try {
-        res.json("Follow/Unfollow User")
+        const userToFollowId = req.params.id; //gets user id of person you want to follow
+        if(req.user.id === userToFollowId) {//req.user.id goes through authmiddleware and verifies the id of you, the current logged in user
+            return next(new HttpError("You can't follow yourself", 422))
+        }
+        const currentUser = await userModel.findById(req.user.id); //gets info of current user to look through following to make sur
+        const isFollowing = currentUser?.following?.includes(userToFollowId);
+        //follow if not following, else unfollow if following
+        if(!isFollowing) {
+            const updatedUser = await userModel.findByIdAndUpdate(userToFollowId,
+            {$push: {followers: req.user.id}}, {new: true})
+            await userModel.findByIdAndUpdate(req.user.id, 
+            {$push: {following: userToFollowId}}, {new: true})
+            res.json(updatedUser)
+        } else {
+            const updatedUser = await userModel.findByIdAndUpdate(userToFollowId,
+            {$pull: {followers: req.user.id}}, {new: true})
+            await userModel.findByIdAndUpdate(req.user.id, 
+            {$pull: {following: userToFollowId}}, {new: true})
+            res.json(updatedUser)
+        }
     } catch (error) {
         return next(new HttpError(error))
     }
@@ -142,7 +162,19 @@ const followUnfollowUser = async (req, res, next) => {
 
 const changeUserAvatar = async (req, res, next) => {
     try {
-        res.json("Change User Avatar")
+        if(!req.files.avatar) {
+            return next(new HttpError("Please choose an image", 422))
+        }
+        const {avatar} = req.files;
+        //check file size
+        if(avatar.size > 500000) {
+            return next(new HttpError("file too large, must be less than 500kb"))
+        }
+
+        let fileName = avatar.name;
+        let splitFilename = fileName.split(".")
+        let newFilename = splitFilename[0] + uuid() + "." + splitFilename[splitFilename.length - 1];
+        res.json(newFilename)
     } catch (error) {
         return next(new HttpError(error))
     }
